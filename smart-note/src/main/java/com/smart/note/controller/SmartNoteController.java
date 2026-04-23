@@ -1,5 +1,6 @@
 package com.smart.note.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,19 +12,17 @@ import com.smart.note.service.SmartNoteService;
 @RestController
 @RequestMapping("note")
 public class SmartNoteController {
-	
+
 	private SmartNoteService smartNoteService;
-	
-	public SmartNoteController(SmartNoteService smartNoteService)
-	{
-		this.smartNoteService=smartNoteService;
+
+	public SmartNoteController(SmartNoteService smartNoteService) {
+		this.smartNoteService = smartNoteService;
 	}
-	
+
 	@PostMapping(value = "enhanced")
-	public String getRefinedNotes(@RequestBody SmartNoteRequest smartNoteRequest)
-	{
+	public String getRefinedNotes(@RequestBody SmartNoteRequest smartNoteRequest) {
 		return smartNoteService.getRefinedNoteService(smartNoteRequest);
-		
+
 	}
 
 }
