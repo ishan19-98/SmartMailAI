@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.smart.note.domain.Content;
 import com.smart.note.domain.GeminiAPIRequest;
+import com.smart.note.domain.GeminiApiRestResponse;
 import com.smart.note.domain.Part;
 import com.smart.note.domain.SmartNoteRequest;
 import com.smart.note.service.SmartNoteService;
@@ -60,9 +61,13 @@ public class SmartNoteServiceImpl implements SmartNoteService{
 		
 		HttpEntity requestAndHeaders = new HttpEntity(geminiAPIRequest, httpHeaders);
 		
-		ResponseEntity<Map> response = restTemplate.exchange(urlWithKey, HttpMethod.POST, requestAndHeaders, Map.class);
+		ResponseEntity<GeminiApiRestResponse> response = restTemplate.exchange(urlWithKey, HttpMethod.POST, requestAndHeaders, GeminiApiRestResponse.class);
+		
+		GeminiApiRestResponse geminiApiRestResponse = response.getBody();
 
-		return null;
+		String suggestedResponse = geminiApiRestResponse.getCandidates().get(0).getContent().getParts().get(0).getText();
+		
+		return suggestedResponse;
 	}
 
 	private String buildPrompt(SmartNoteRequest smartNoteRequest) {

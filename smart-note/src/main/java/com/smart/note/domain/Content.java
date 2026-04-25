@@ -5,6 +5,16 @@ import java.util.List;
 public class Content {
 
 	private List<Part> parts;
+	
+	private String role;
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public List<Part> getParts() {
 		return parts;
