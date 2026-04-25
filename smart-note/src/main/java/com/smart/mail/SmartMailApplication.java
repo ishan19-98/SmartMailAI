@@ -1,4 +1,4 @@
-package com.smart.note;
+package com.smart.mail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class SmartNoteApplication {
+public class SmartMailApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SmartNoteApplication.class, args);
+		SpringApplication.run(SmartMailApplication.class, args);
 	}
 
 	@Bean

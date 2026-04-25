@@ -1,4 +1,4 @@
-package com.smart.note.domain;
+package com.smart.mail.domain;
 
 import java.util.List;
 
