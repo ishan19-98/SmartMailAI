@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.smart.mail.controller.SmartMailController;
+import com.smart.mail.domain.Candidate;
 import com.smart.mail.domain.Content;
 import com.smart.mail.domain.EmailResponse;
 import com.smart.mail.domain.GeminiAPIRequest;
@@ -22,6 +26,7 @@ import com.smart.mail.domain.GeminiApiRestResponse;
 import com.smart.mail.domain.Part;
 import com.smart.mail.domain.SmartMailRequest;
 import com.smart.mail.service.SmartMailService;
+import com.smart.mail.service.exceptionhandling.GeminiResponseException;
 
 import tools.jackson.databind.ObjectMapper;
 
@@ -36,13 +41,16 @@ public class SmartMailServiceImpl implements SmartMailService{
 	
 	private final RestTemplate restTemplate;
 	
+	private static final Logger logger = LoggerFactory.getLogger(SmartMailServiceImpl.class);
+
+	
 	@Autowired
 	public SmartMailServiceImpl(RestTemplate restTemplate) 
 	{
 		this.restTemplate=restTemplate;
 	}
 
-	public EmailResponse generateEmail(SmartMailRequest smartMailRequest) {
+	public EmailResponse generateEmail(SmartMailRequest smartMailRequest) throws GeminiResponseException {
 
 		EmailResponse mappedResponse = null;
 
@@ -51,28 +59,39 @@ public class SmartMailServiceImpl implements SmartMailService{
 		//URI
 		String urlWithKey = uri+"?key="+API_KEY;
 		
-		HttpEntity requestAndHeaders = buildRequest(prompt);
+		HttpEntity<GeminiAPIRequest> requestAndHeaders = buildRequest(prompt);
 
 		ResponseEntity<GeminiApiRestResponse> response = restTemplate.exchange(urlWithKey, HttpMethod.POST, requestAndHeaders, GeminiApiRestResponse.class);
 		
 		GeminiApiRestResponse geminiApiRestResponse = response.getBody();
 
-		String mailResponse = geminiApiRestResponse.getCandidates().get(0).getContent().getParts().get(0).getText();
-				
-		mailResponse=mailResponse.replace("```json", "").replace("```","");
-				
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-		    mappedResponse = mapper.readValue(mailResponse, EmailResponse.class);
+		// String mailResponse =
+		// geminiApiRestResponse.getCandidates().get(0).getContent().getParts().get(0).getText();
+
+		String mailResponse = geminiApiRestResponse.getCandidates().stream().findFirst().get().getContent().getParts()
+				.get(0).getText();
+
+		if (mailResponse != null) {
+			mailResponse = mailResponse.replace("```json", "").replace("```", "");
+		} else {
+			logger.error("Error occured while fetching data from Gemini AI API");
+			throw new GeminiResponseException("Error occured while fetching data from Gemini AI API");
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			mappedResponse = mapper.readValue(mailResponse, EmailResponse.class);
 		} catch (Exception e) {
-		    //return new EmailResponse("Generated Email", aiText); // fallback
+			logger.error("Error occured while mapping data received from Gemini AI API");
 		}
 		
-	    return mappedResponse; // fallback
+	    return mappedResponse; 
 	}
 
-	private HttpEntity buildRequest(String prompt) {
+	private HttpEntity<GeminiAPIRequest> buildRequest(String prompt) {
 		
+		        //Headers
 				HttpHeaders httpHeaders = new HttpHeaders();
 				httpHeaders.add("Content-Type", "application/json");
 
@@ -86,7 +105,7 @@ public class SmartMailServiceImpl implements SmartMailService{
 				geminiAPIRequest.setContents(Arrays.asList(content));
 				
 				
-				HttpEntity requestAndHeaders = new HttpEntity(geminiAPIRequest, httpHeaders);
+				HttpEntity<GeminiAPIRequest> requestAndHeaders = new HttpEntity<>(geminiAPIRequest, httpHeaders);
 				
 				return requestAndHeaders;
 	}
