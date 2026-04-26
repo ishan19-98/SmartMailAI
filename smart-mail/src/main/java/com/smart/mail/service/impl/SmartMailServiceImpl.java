@@ -65,9 +65,6 @@ public class SmartMailServiceImpl implements SmartMailService{
 		
 		GeminiApiRestResponse geminiApiRestResponse = response.getBody();
 
-		// String mailResponse =
-		// geminiApiRestResponse.getCandidates().get(0).getContent().getParts().get(0).getText();
-
 		String mailResponse = geminiApiRestResponse.getCandidates().stream().findFirst().get().getContent().getParts()
 				.get(0).getText();
 
