@@ -1,4 +1,4 @@
-# 📧 AI-Powered Email Generator
+# 📧 SmartMailAI - AI-Powered Email Generator
 
 An intelligent backend application built using **Java** and **Spring Boot** that generates professional, well-structured emails from minimal user input by leveraging the capabilities of **Google Gemini AI API**.
 
