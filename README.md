@@ -51,52 +51,6 @@ The system uses **AI-powered prompt engineering** to transform raw input into st
 
 ---
 
-## 🔧 How It Works
-
-1. User sends a request with:
-
-   * Sender name
-   * Receiver name
-   * Context (short description)
-   * Tone
-   * 
-2. Backend builds a structured prompt
-
-3. Request is sent to **Google Gemini AI API**
-
-4. AI generates:
-
-   * Subject line
-   * Email body
-
-5. Response is parsed and returned in structured format
-
----
-
-## 📥 Sample Request
-
-```json
-{
-  "senderName": "Sender",
-  "receiverName": "Manager",
-  "subjectHint": "Leave Request",
-  "context": "Need leave for 3 days due to personal reasons",
-  "tone": "FORMAL"
-}
-```
-
----
-
-## 📤 Sample Response
-
-```json
-{
-  "subject": "Request for Leave for Three Days",
-  "emailBody": "Dear Manager,\n\nI hope you are doing well...\n\nRegards,\nSender"
-}
-```
----
-
 ## 💡 Author
 
 **Ishan Choudhary**
