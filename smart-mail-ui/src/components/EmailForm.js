@@ -1,61 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function EmailForm() {
+  const [sender, setSender] = useState("");
+  const [receiver, setReceiver] = useState("");
+  const [subject, setSubject] = useState("");
+  const [tone, setTone] = useState("");
+  const [context, setContext] = useState("");
+  const [message, setMessage] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setMessage(true);
+  };
+
   return (
-    <form className="container mt-5">
-      <div className="mb-3">
-        <label htmlFor="sender" className="form-label">
-          Sender Name
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="sender"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="receiver" className="form-label">
-          Receiver Name
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="receiver"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="subject" className="form-label">
-          Subject
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="subject"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="tone" className="form-label">
-          Tone
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="tone"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="context" className="form-label">
-          Context
-        </label>
-        <textarea
-          type="textarea"
-          className="form-control"
-          id="context"
-        />
-      </div>
-      <button type="submit" className="btn btn-primary">
-        Generate Email
-      </button>
-    </form>
+    <>
+      <form className="container mt-5" onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="sender" className="form-label">
+            Sender Name
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="sender"
+            value={sender}
+            onChange={(e) => setSender(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="receiver" className="form-label">
+            Receiver Name
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="receiver"
+            value={receiver}
+            onChange={(e) => setReceiver(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="subject" className="form-label">
+            Subject
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="tone" className="form-label">
+            Tone
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="tone"
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="context" className="form-label">
+            Context
+          </label>
+          <textarea
+            type="textarea"
+            className="form-control"
+            id="context"
+            value={context}
+            onChange={(e) => setContext(e.target.value)}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Generate Email
+        </button>
+      </form>
+      { message  && 
+        <div>
+          <p>Email Details</p>
+          <p>From: {sender}</p>
+          <p>To: {receiver}</p>
+          <p>Subject: {subject}</p>
+          <p>Tone: {tone}</p>
+          <p>Context: {context}</p>
+        </div>
+      }
+    </>
   );
 }
