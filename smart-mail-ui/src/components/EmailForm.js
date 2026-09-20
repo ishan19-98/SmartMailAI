@@ -8,6 +8,8 @@ export default function EmailForm() {
   const [context, setContext] = useState("");
   const [message, setMessage] = useState(false);
 
+  const tones = ["Formal", "Friendly", "Apologetic", "Request-based"];
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setMessage(true);
@@ -56,13 +58,19 @@ export default function EmailForm() {
           <label htmlFor="tone" className="form-label">
             Tone
           </label>
-          <input
-            type="text"
+          <select
             className="form-control"
-            id="tone"
             value={tone}
+            id="tone"
             onChange={(e) => setTone(e.target.value)}
-          />
+          >
+            <option value="">Select Tone</option>
+            {tones.map((tone) => (
+              <option className="form-control" key={tone}>
+                {tone}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="context" className="form-label">
@@ -80,7 +88,7 @@ export default function EmailForm() {
           Generate Email
         </button>
       </form>
-      { message  && 
+      {message && (
         <div>
           <p>Email Details</p>
           <p>From: {sender}</p>
@@ -89,7 +97,7 @@ export default function EmailForm() {
           <p>Tone: {tone}</p>
           <p>Context: {context}</p>
         </div>
-      }
+      )}
     </>
   );
 }
