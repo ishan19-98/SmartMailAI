@@ -6,13 +6,36 @@ export default function EmailForm() {
   const [subject, setSubject] = useState("");
   const [tone, setTone] = useState("");
   const [context, setContext] = useState("");
-  const [message, setMessage] = useState(false);
+  const [message, setMessage] = useState(false)
+  const [status, setStatus] = useState("")
 
   const tones = ["Formal", "Friendly", "Apologetic", "Request-based"];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage(true);
+    if (
+      sender === "" ||
+      receiver === "" ||
+      subject === "" ||
+      tone === "" ||
+      context === ""
+    ) {
+      setStatus("Please fill the required details")
+      setMessage(false);
+    } else {
+      setStatus("Form Submitted Successfully!")
+      setMessage(true);
+    }
+  };
+
+  const handleReset = () => {
+    setSender("")
+    setReceiver("")
+    setTone("")
+    setSubject("")
+    setContext("")
+    setMessage(false)
+    setStatus("")
   };
 
   return (
@@ -66,7 +89,7 @@ export default function EmailForm() {
           >
             <option value="">Select Tone</option>
             {tones.map((tone) => (
-              <option className="form-control" key={tone}>
+              <option value={tone} key={tone}>
                 {tone}
               </option>
             ))}
@@ -77,17 +100,22 @@ export default function EmailForm() {
             Context
           </label>
           <textarea
-            type="textarea"
             className="form-control"
             id="context"
             value={context}
             onChange={(e) => setContext(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <div>
+          <button type="submit" className="btn btn-primary me-3">
           Generate Email
         </button>
+        <button type="button" className="btn btn-primary" onClick={handleReset}>
+          Reset
+        </button>
+        </div>
       </form>
+      <p>{status}</p>
       {message && (
         <div>
           <p>Email Details</p>
