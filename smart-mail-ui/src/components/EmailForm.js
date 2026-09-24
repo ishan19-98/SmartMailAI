@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function EmailForm({sendData}) {
+export default function EmailForm({ sendData }) {
   const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState("");
   const [subject, setSubject] = useState("");
@@ -51,7 +51,8 @@ export default function EmailForm({sendData}) {
 
         const genMail = await res.json();
         setGeneratedMail(genMail);
-        sendData(generatedMail)
+        sendData(genMail);
+        setError("");
       } catch (error) {
         setError("Sorry! Unable to generate mail");
         console.log(error);
@@ -71,6 +72,7 @@ export default function EmailForm({sendData}) {
     setGeneratedMail(null);
     setLoading(false);
     setError("");
+    sendData(null);
   };
 
   useEffect(() => {
@@ -147,7 +149,11 @@ export default function EmailForm({sendData}) {
         </div>
         <p>Characters: {charCount}</p>
         <div>
-          <button type="submit" className="btn btn-primary me-3">
+          <button
+            type="submit"
+            className="btn btn-primary me-3"
+            disabled={loading}
+          >
             Generate Email
           </button>
           <button
@@ -159,18 +165,9 @@ export default function EmailForm({sendData}) {
           </button>
         </div>
       </form>
-      {loading && <p>Generating....</p>}
-      <p>{status}</p>
-      {generatedMail &&
-        (error === "" ? (
-          <div>
-            <p>Generated Email</p>
-            <p>Subject: {generatedMail.subject}</p>
-            <p>Body: {generatedMail.body}</p>
-          </div>
-        ) : 
-          <p>error</p>
-        )}
+      {loading && <p className="text-center">Generating....</p>}
+      <p className="mt-5 text-center">{status}</p>
+      {error === "" ? "" : <p className="text-center">{error}</p>}
     </>
   );
 }

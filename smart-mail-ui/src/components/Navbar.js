@@ -5,7 +5,7 @@ export default function Navbar() {
     <div className="bg-body-dark">
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand mx-auto" href="#">
             SmartMailAI
           </a>
         </div>

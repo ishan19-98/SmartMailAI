@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import EmailForm from "./components/EmailForm";
 import Footer from "./components/Footer";
@@ -5,22 +6,20 @@ import GeneratedEmail from "./components/GeneratedEmail";
 import Navbar from "./components/Navbar";
 
 function App() {
+  const [generatedMailData, setGeneratedMailData] = useState(null);
 
-  const email={
-    "sender": "ishan",
-    "receiver": "raj",
-    "subject": "Hello",
-    "body": "Hello, How are you?"
-  }
+  const handleData = (genMail) => {
+    setGeneratedMailData(genMail);
+  };
 
   return (
     <div>
       <Navbar />
       <div className="mb-5">
-        <EmailForm />
+        <EmailForm sendData={handleData} />
       </div>
       <div className="mb-5">
-        <GeneratedEmail email={email}/>
+        {generatedMailData && <GeneratedEmail generatedMailData={generatedMailData} />}
       </div>
       <Footer />
     </div>
