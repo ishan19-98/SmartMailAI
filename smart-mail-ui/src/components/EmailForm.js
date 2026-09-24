@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function EmailForm() {
+export default function EmailForm({sendData}) {
   const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState("");
   const [subject, setSubject] = useState("");
   const [tone, setTone] = useState("");
   const [context, setContext] = useState("");
-  const [message, setMessage] = useState(false)
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("");
+
+  const [error, setError] = useState("");
+
+  const [charCount, setCharCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const [generatedMail, setGeneratedMail] = useState(null);
 
   const tones = ["Formal", "Friendly", "Apologetic", "Request-based"];
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (
       sender === "" ||
@@ -20,23 +26,56 @@ export default function EmailForm() {
       tone === "" ||
       context === ""
     ) {
-      setStatus("Please fill the required details")
-      setMessage(false);
+      setStatus("Please fill the required details");
     } else {
-      setStatus("Form Submitted Successfully!")
-      setMessage(true);
+      setLoading(true);
+
+      let request = JSON.stringify({
+        senderName: sender,
+        receiverName: receiver,
+        subject: subject,
+        context: context,
+        tone: tone,
+      });
+
+      try {
+        const res = await fetch("http://localhost:8080/mail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: request,
+        });
+
+        if (!res.ok) throw Error("API Error");
+
+        const genMail = await res.json();
+        setGeneratedMail(genMail);
+        sendData(generatedMail)
+      } catch (error) {
+        setError("Sorry! Unable to generate mail");
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+  }
 
   const handleReset = () => {
-    setSender("")
-    setReceiver("")
-    setTone("")
-    setSubject("")
-    setContext("")
-    setMessage(false)
-    setStatus("")
+    setSender("");
+    setReceiver("");
+    setTone("");
+    setSubject("");
+    setContext("");
+    setStatus("");
+    setGeneratedMail(null);
+    setLoading(false);
+    setError("");
   };
+
+  useEffect(() => {
+    setCharCount(context.length);
+  }, [context]);
 
   return (
     <>
@@ -106,26 +145,32 @@ export default function EmailForm() {
             onChange={(e) => setContext(e.target.value)}
           />
         </div>
+        <p>Characters: {charCount}</p>
         <div>
           <button type="submit" className="btn btn-primary me-3">
-          Generate Email
-        </button>
-        <button type="button" className="btn btn-primary" onClick={handleReset}>
-          Reset
-        </button>
+            Generate Email
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
         </div>
       </form>
+      {loading && <p>Generating....</p>}
       <p>{status}</p>
-      {message && (
-        <div>
-          <p>Email Details</p>
-          <p>From: {sender}</p>
-          <p>To: {receiver}</p>
-          <p>Subject: {subject}</p>
-          <p>Tone: {tone}</p>
-          <p>Context: {context}</p>
-        </div>
-      )}
+      {generatedMail &&
+        (error === "" ? (
+          <div>
+            <p>Generated Email</p>
+            <p>Subject: {generatedMail.subject}</p>
+            <p>Body: {generatedMail.body}</p>
+          </div>
+        ) : 
+          <p>error</p>
+        )}
     </>
   );
 }
