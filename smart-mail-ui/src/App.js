@@ -19,7 +19,14 @@ function App() {
         <EmailForm sendData={handleData} />
       </div>
       <div className="mb-5">
-        {generatedMailData && <GeneratedEmail generatedMailData={generatedMailData} />}
+        {generatedMailData !== null ? (
+          <GeneratedEmail generatedMailData={generatedMailData} />
+        ) : (
+          <div className="text-center">
+            <p>No email generated yet.</p>
+            <p>Fill in the form above and click Generate Email.</p>
+          </div>
+        )}
       </div>
       <Footer />
     </div>

@@ -13,12 +13,13 @@ export default function EmailForm({ sendData }) {
   const [charCount, setCharCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [generatedMail, setGeneratedMail] = useState(null);
 
   const tones = ["Formal", "Friendly", "Apologetic", "Request-based"];
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+    setStatus('')
     if (
       sender === "" ||
       receiver === "" ||
@@ -47,15 +48,14 @@ export default function EmailForm({ sendData }) {
           body: request,
         });
 
-        if (!res.ok) throw Error("API Error");
+        if (!res.ok)
+          throw new Error("❌ Unable to generate email. Please try again.");
 
         const genMail = await res.json();
-        setGeneratedMail(genMail);
         sendData(genMail);
-        setError("");
       } catch (error) {
-        setError("Sorry! Unable to generate mail");
-        console.log(error);
+        setError(error.message);
+        console.log(error.message);
       } finally {
         setLoading(false);
       }
@@ -69,7 +69,6 @@ export default function EmailForm({ sendData }) {
     setSubject("");
     setContext("");
     setStatus("");
-    setGeneratedMail(null);
     setLoading(false);
     setError("");
     sendData(null);
@@ -154,7 +153,7 @@ export default function EmailForm({ sendData }) {
             className="btn btn-primary me-3"
             disabled={loading}
           >
-            Generate Email
+            {loading ? `Generating...` : `Generate Email`}
           </button>
           <button
             type="button"
@@ -165,9 +164,8 @@ export default function EmailForm({ sendData }) {
           </button>
         </div>
       </form>
-      {loading && <p className="text-center">Generating....</p>}
       <p className="mt-5 text-center">{status}</p>
-      {error === "" ? "" : <p className="text-center">{error}</p>}
+      {error && <p className="text-center">{error}</p>}
     </>
   );
 }
