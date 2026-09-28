@@ -1,35 +1,23 @@
-import { useState } from "react";
-import "./App.css";
-import EmailForm from "./components/EmailForm";
-import Footer from "./components/Footer";
-import GeneratedEmail from "./components/GeneratedEmail";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Help from "./pages/Help";
+import ErrorPage from "./pages/ErrorPage";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
-  const [generatedMailData, setGeneratedMailData] = useState(null);
-
-  const handleData = (genMail) => {
-    setGeneratedMailData(genMail);
-  };
-
   return (
-    <div>
+    <BrowserRouter>
       <Navbar />
-      <div className="mb-5">
-        <EmailForm sendData={handleData} />
-      </div>
-      <div className="mb-5">
-        {generatedMailData !== null ? (
-          <GeneratedEmail generatedMailData={generatedMailData} />
-        ) : (
-          <div className="text-center">
-            <p>No email generated yet.</p>
-            <p>Fill in the form above and click Generate Email.</p>
-          </div>
-        )}
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/about" element={<About />}></Route>
+        <Route path="/help" element={<Help />}></Route>
+        <Route path="*" element={<ErrorPage />}></Route>
+      </Routes>
       <Footer />
-    </div>
+    </BrowserRouter>
   );
 }
 
