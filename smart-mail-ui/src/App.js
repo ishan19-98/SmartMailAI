@@ -5,18 +5,21 @@ import Help from "./pages/Help";
 import ErrorPage from "./pages/ErrorPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import AppProvider from "./context/AppProvider";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/help" element={<Help />}></Route>
-        <Route path="*" element={<ErrorPage />}></Route>
-      </Routes>
-      <Footer />
+      <AppProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/about" element={<About />}></Route>
+          <Route path="/help" element={<Help />}></Route>
+          <Route path="*" element={<ErrorPage />}></Route>
+        </Routes>
+        <Footer />
+      </AppProvider>
     </BrowserRouter>
   );
 }

@@ -4,9 +4,11 @@ import "../App.css";
 import EmailForm from "../components/EmailForm";
 import Footer from "../components/Footer";
 import GeneratedEmail from "../components/GeneratedEmail";
+import useAppContext from "../context/useAppContext";
 
 export default function Home() {
-  const [generatedMailData, setGeneratedMailData] = useState(null);
+
+  const {generatedMailData,setGeneratedMailData}=useAppContext();
 
   const handleData = (genMail) => {
     setGeneratedMailData(genMail);

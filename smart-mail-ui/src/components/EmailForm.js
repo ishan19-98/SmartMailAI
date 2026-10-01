@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import useAppContext from "../context/useAppContext";
 
-export default function EmailForm({ sendData }) {
+export default function EmailForm() {
   const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState("");
   const [subject, setSubject] = useState("");
@@ -14,6 +15,8 @@ export default function EmailForm({ sendData }) {
   const [loading, setLoading] = useState(false);
 
   const tones = ["Formal", "Friendly", "Apologetic", "Request-based"];
+
+  const { generatedMailData, setGeneratedMailData } = useAppContext();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -51,7 +54,7 @@ export default function EmailForm({ sendData }) {
           throw new Error("❌ Unable to generate email. Please try again.");
 
         const genMail = await res.json();
-        sendData(genMail);
+        setGeneratedMailData(genMail);
       } catch (error) {
         setError(error.message);
         console.log(error.message);
@@ -70,7 +73,7 @@ export default function EmailForm({ sendData }) {
     setStatus("");
     setLoading(false);
     setError("");
-    sendData(null);
+    setGeneratedMailData(null);
   };
 
   useEffect(() => {
