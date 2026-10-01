@@ -1,18 +1,12 @@
 import React from "react";
-import { useState } from "react";
 import "../App.css";
 import EmailForm from "../components/EmailForm";
-import Footer from "../components/Footer";
 import GeneratedEmail from "../components/GeneratedEmail";
 import useAppContext from "../context/useAppContext";
 
 export default function Home() {
 
-  const {generatedMailData,setGeneratedMailData}=useAppContext();
-
-  const handleData = (genMail) => {
-    setGeneratedMailData(genMail);
-  };
+  const {generatedMailData}=useAppContext();
 
   return (
     <div className="hero-section">
@@ -20,7 +14,7 @@ export default function Home() {
         <div className="row g-4 align-items-start">
           {/* Left side - Email Form */}
           <div className="col-lg-7">
-            <EmailForm sendData={handleData} />
+            <EmailForm />
           </div>
 
           {/* Right side - Generated Email */}

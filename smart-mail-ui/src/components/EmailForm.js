@@ -16,7 +16,7 @@ export default function EmailForm() {
 
   const tones = ["Formal", "Friendly", "Apologetic", "Request-based"];
 
-  const { generatedMailData, setGeneratedMailData } = useAppContext();
+  const { setGeneratedMailData } = useAppContext();
 
   async function handleSubmit(e) {
     e.preventDefault();
