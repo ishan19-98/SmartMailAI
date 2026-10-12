@@ -18,6 +18,8 @@ export default function EmailForm() {
 
   const { setGeneratedMailData } = useAppContext();
 
+  const API_URL = process.env.REACT_APP_BASE_URL;
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -42,7 +44,7 @@ export default function EmailForm() {
       });
 
       try {
-        const res = await fetch("http://localhost:8080/mail", {
+        const res = await fetch(`${API_URL}/mail`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
