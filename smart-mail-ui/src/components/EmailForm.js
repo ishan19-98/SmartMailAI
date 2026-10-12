@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAppContext from "../context/useAppContext";
+import { sendMail } from "../services/mailService.js";
 
 export default function EmailForm() {
   const [sender, setSender] = useState("");
@@ -18,8 +19,6 @@ export default function EmailForm() {
 
   const { setGeneratedMailData } = useAppContext();
 
-  const API_URL = process.env.REACT_APP_BASE_URL;
-
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -34,32 +33,11 @@ export default function EmailForm() {
       setStatus("Please fill the required details");
     } else {
       setLoading(true);
-
-      let request = JSON.stringify({
-        senderName: sender,
-        receiverName: receiver,
-        subject: subject,
-        context: context,
-        tone: tone,
-      });
-
       try {
-        const res = await fetch(`${API_URL}/mail`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: request,
-        });
-
-        if (!res.ok)
-          throw new Error("❌ Unable to generate email. Please try again.");
-
-        const genMail = await res.json();
+        const genMail = await sendMail({ sender, receiver, subject, context, tone });
         setGeneratedMailData(genMail);
       } catch (error) {
         setError(error.message);
-        console.log(error.message);
       } finally {
         setLoading(false);
       }
